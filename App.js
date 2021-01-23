@@ -35,6 +35,8 @@ export default () => {
       <FlatList
         data={data}
         keyExtractor={(_, index) => index.toString()}
+        horizontal
+        pagingEnabled
         renderItem={({ item }) => {
           return (
             <View>
