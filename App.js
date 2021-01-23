@@ -39,10 +39,17 @@ export default () => {
         pagingEnabled
         renderItem={({ item }) => {
           return (
-            <View>
+            <View
+              style={{ width, justifyContent: "center", alignItems: "center" }}
+            >
               <Image
                 source={{ uri: item }}
-                style={{ width: imageW, height: imageH, resizeMode: "cover" }}
+                style={{
+                  width: imageW,
+                  height: imageH,
+                  resizeMode: "cover",
+                  borderRadius: 16,
+                }}
               />
             </View>
           );
