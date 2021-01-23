@@ -1,19 +1,17 @@
 // Inspiration: https://dribbble.com/shots/14139308-Simple-Scroll-Animation
 // Illustrations by: SAMji https://dribbble.com/SAMji_illustrator
 
-import * as React from "react";
+import React, { useRef } from "react";
 import {
   StatusBar,
-  FlatList,
   Image,
   Animated,
-  Text,
   View,
   Dimensions,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
+import styles from "./styles";
 
 const data = [
   "https://cdn.dribbble.com/users/3281732/screenshots/11192830/media/7690704fa8f0566d572a085637dd1eee.jpg?compress=1&resize=1200x1200",
@@ -25,43 +23,49 @@ const data = [
   "https://cdn.dribbble.com/users/3281732/screenshots/13661330/media/1d9d3cd01504fa3f5ae5016e5ec3a313.jpg?compress=1&resize=1200x1200",
 ];
 
-const imageW = width * 0.7;
-const imageH = imageW * 1.54;
 
 export default () => {
+  const scrollX = useRef(new Animated.Value(0)).current;
+
   return (
-    <View style={{ flex: 1, backgroundColor: "#000" }}>
+    <View style={styles.carouselContainer}>
       <StatusBar hidden />
       <View style={StyleSheet.absoluteFillObject}>
         {data.map((img, index) => {
+          const inputRange = [
+            (index - 1) * width,
+            index * width,
+            (index + 1) * width,
+          ];
+          const opacity = scrollX.interpolate({
+            inputRange,
+            outputRange: [0, 1, 0],
+          });
           return (
-            <Image
+            <Animated.Image
               key={`image-${index}`}
               source={{ uri: img }}
-              style={[StyleSheet.absoluteFillObject]}
+              style={[StyleSheet.absoluteFillObject, { opacity }]}
               blurRadius={50}
             />
           );
         })}
       </View>
-      <FlatList
+      <Animated.FlatList
         data={data}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: true }
+        )}
         keyExtractor={(_, index) => index.toString()}
         horizontal
         pagingEnabled
         renderItem={({ item }) => {
           return (
-            <View
-              style={{ width, justifyContent: "center", alignItems: "center" }}
-            >
+            <View style={styles.imageContainer}>
               <Image
                 source={{ uri: item }}
-                style={{
-                  width: imageW,
-                  height: imageH,
-                  resizeMode: "cover",
-                  borderRadius: 16,
-                }}
+                style={styles.image}
               />
             </View>
           );
