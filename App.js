@@ -32,6 +32,18 @@ export default () => {
   return (
     <View style={{ flex: 1, backgroundColor: "#000" }}>
       <StatusBar hidden />
+      <View style={StyleSheet.absoluteFillObject}>
+        {data.map((img, index) => {
+          return (
+            <Image
+              key={`image-${index}`}
+              source={{ uri: img }}
+              style={[StyleSheet.absoluteFillObject]}
+              blurRadius={50}
+            />
+          );
+        })}
+      </View>
       <FlatList
         data={data}
         keyExtractor={(_, index) => index.toString()}
